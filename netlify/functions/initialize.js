@@ -1,102 +1,59 @@
 exports.handler = async (event, context) => {
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Content-Type': 'application/json'
-  };
+  // Log everything so we can see what's happening
+  console.log('=== FUNCTION CALLED ===');
+  console.log('Method:', event.httpMethod);
+  console.log('Headers:', event.headers);
+  console.log('Body:', event.body);
+  console.log('========================');
+  
+  try {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS'
+    };
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: 'Method Not Allowed' };
-  }
-
-  const widgetContent = {
-    canvas: {
-      content: {
-        components: [
-          {
-            type: "text",
-            text: "🎯 Customer Data Dashboard",
-            style: "header",
-            align: "center"
-          },
-          {
-            type: "spacer",
-            size: "m"
-          },
-          {
-            type: "text",
-            text: "💰 Account Information",
-            style: "header"
-          },
-          {
-            type: "list",
-            items: [
-              { text: "Lifetime Value: $12,450" },
-              { text: "Support Tier: Premium" },
-              { text: "Last Purchase: Jan 15, 2025" },
-              { text: "Account Manager: Sarah Johnson" }
-            ]
-          },
-          {
-            type: "spacer", 
-            size: "m"
-          },
-          {
-            type: "text",
-            text: "📊 Recent Activity",
-            style: "header"
-          },
-          {
-            type: "list",
-            items: [
-              { text: "Logged into platform 3 times this week" },
-              { text: "Downloaded new feature guide" },
-              { text: "Opened 2 support tickets (both resolved)" }
-            ]
-          },
-          {
-            type: "spacer",
-            size: "m"
-          },
-          {
-            type: "text", 
-            text: "⭐ Trustpilot Reviews",
-            style: "header"
-          },
-          {
-            type: "list",
-            items: [
-              { text: "Rating: 4.8/5 stars" },
-              { text: "Total Reviews: 23 reviews" },
-              { text: "Latest: 'Excellent support team!' - 3 days ago" }
-            ]
-          },
-          {
-            type: "spacer",
-            size: "m"
-          },
-          {
-            type: "button",
-            label: "Create Jira Ticket",
-            style: "primary",
-            id: "create_ticket",
-            action: {
-              type: "submit"
-            }
-          }
-        ]
-      }
+    if (event.httpMethod === 'OPTIONS') {
+      console.log('Returning OPTIONS response');
+      return { statusCode: 200, headers, body: '' };
     }
-  };
 
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify(widgetContent)
-  };
+    if (event.httpMethod !== 'POST') {
+      console.log('Wrong method, returning 405');
+      return { statusCode: 405, headers, body: 'Method Not Allowed' };
+    }
+
+    console.log('Creating widget response...');
+    
+    const widgetContent = {
+      canvas: {
+        content: {
+          components: [
+            {
+              type: "text",
+              text: "Debug: Widget loaded successfully!"
+            }
+          ]
+        }
+      }
+    };
+
+    const response = {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify(widgetContent)
+    };
+
+    console.log('Response being sent:', JSON.stringify(response, null, 2));
+    return response;
+
+  } catch (error) {
+    console.error('Function error:', error);
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: error.message })
+    };
+  }
 };
