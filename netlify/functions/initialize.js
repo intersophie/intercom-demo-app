@@ -1,10 +1,6 @@
 exports.handler = async (event, context) => {
-  // Log everything so we can see what's happening
   console.log('=== FUNCTION CALLED ===');
   console.log('Method:', event.httpMethod);
-  console.log('Headers:', event.headers);
-  console.log('Body:', event.body);
-  console.log('========================');
   
   try {
     const headers = {
@@ -15,45 +11,94 @@ exports.handler = async (event, context) => {
     };
 
     if (event.httpMethod === 'OPTIONS') {
-      console.log('Returning OPTIONS response');
       return { statusCode: 200, headers, body: '' };
     }
 
     if (event.httpMethod !== 'POST') {
-      console.log('Wrong method, returning 405');
       return { statusCode: 405, headers, body: 'Method Not Allowed' };
     }
 
-    console.log('Creating widget response...');
-    
+    // Canvas Kit requires very specific format
     const widgetContent = {
       canvas: {
         content: {
           components: [
             {
               type: "text",
-              text: "Debug: Widget loaded successfully!"
+              text: "🎯 Customer Data Dashboard",
+              style: "header",
+              align: "center"
+            },
+            {
+              type: "spacer",
+              size: "m"
+            },
+            {
+              type: "text",
+              text: "💰 Account Information",
+              style: "header",
+              align: "left"
+            },
+            {
+              type: "list",
+              items: [
+                { text: "Lifetime Value: $12,450" },
+                { text: "Support Tier: Premium" },
+                { text: "Account Manager: Sarah Johnson" }
+              ]
+            },
+            {
+              type: "spacer",
+              size: "m"
+            },
+            {
+              type: "text",
+              text: "📊 Recent Activity",
+              style: "header",
+              align: "left"
+            },
+            {
+              type: "list", 
+              items: [
+                { text: "Logged in 3 times this week" },
+                { text: "Downloaded feature guide" },
+                { text: "2 support tickets (resolved)" }
+              ]
+            },
+            {
+              type: "spacer",
+              size: "m"
+            },
+            {
+              type: "text",
+              text: "⭐ Trustpilot Reviews",
+              style: "header",
+              align: "left"
+            },
+            {
+              type: "list",
+              items: [
+                { text: "Rating: 4.8/5 stars" },
+                { text: "Total: 23 reviews" },
+                { text: "Latest: 'Excellent support!' - 3 days ago" }
+              ]
+            },
+            {
+              type: "spacer",
+              size: "m"
+            },
+            {
+              type: "button",
+              label: "Create Jira Ticket",
+              style: "primary",
+              id: "create_ticket",
+              action: {
+                type: "submit"
+              }
             }
           ]
         }
       }
     };
 
-    const response = {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify(widgetContent)
-    };
-
-    console.log('Response being sent:', JSON.stringify(response, null, 2));
-    return response;
-
-  } catch (error) {
-    console.error('Function error:', error);
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: error.message })
-    };
-  }
-};
+    console.
